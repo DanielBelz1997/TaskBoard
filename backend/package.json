@@ -4,7 +4,7 @@
   "description": "a mini app that gives you manage your tasks efficiency with nice design and simple to use.",
   "main": "./src/taskboard.js",
   "scripts": {
-    "start:dev": "nodemon taskboard.js",
+    "start": "nodemon taskboard.js",
     "test": "npx jest"
   },
   "author": "Daniel Belz",
@@ -22,3 +22,4 @@
     "uuid": "^10.0.0"
   }
 }
+
