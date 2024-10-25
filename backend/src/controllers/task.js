@@ -3,7 +3,7 @@ const Task = require("../models/Task.js");
 // @desc Get one task
 // @route GET /tasks
 // @access Private
-const getOneUser = async (req, res) => {
+const getTaskById = async (req, res) => {
   try {
     const { id } = req.params;
 
@@ -16,3 +16,4 @@ const getOneUser = async (req, res) => {
     console.log(err);
   }
 };
+
