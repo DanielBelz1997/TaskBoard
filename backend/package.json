@@ -14,12 +14,13 @@
     "date-fns": "^4.1.0",
     "dotenv": "^16.4.5",
     "express": "^4.21.1",
+    "express-validator": "^7.2.0",
     "mongodb": "^6.10.0",
     "mongoose": "^8.7.2",
     "morgan": "^1.10.0",
     "node-cache": "^5.1.2",
     "nodemon": "^3.1.7",
-    "uuid": "^10.0.0"
+    "uuid": "^10.0.0",
+    "zod": "^3.23.8"
   }
 }
-

@@ -1,11 +1,17 @@
-import express from "express";
+const express = require("express");
 const router = express.Router();
-import {} from "../controllers/task.js";
 
-router.get("/:id", getTask);
+const {
+  validateGetTaskById,
+  validateCreateNewTask,
+} = require("../middleware/validation.js");
+const { getTaskById, createNewTask } = require("../controllers/task.js");
 
-router.post("/", createTask);
+router.get("/:id", validateGetTaskById, getTaskById);
+
+router.post("/", validateCreateNewTask, createNewTask);
 
 router.put("/:id", updateTask);
 
 module.exports = router;
+
