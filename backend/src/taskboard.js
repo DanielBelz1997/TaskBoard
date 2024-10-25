@@ -1,17 +1,17 @@
 require("dotenv").config();
-const express = require("express");
-const app = express();
-const fs = require("fs");
-const path = require("path");
 const cors = require("cors");
 const morgan = require("morgan");
-const { logger, logEvents } = require("./middleware/logger");
-const errorHandler = require("./middleware/error_handler.js");
-const connectDB = require("../configs/db_connection.js");
+const express = require("express");
 const mongoose = require("mongoose");
+
+const connectDB = require("../configs/db_connection.js");
 const corsOptions = require("../configs/cors_options.js");
+const errorHandler = require("./middleware/error_handler.js");
+const { logger, logEvents } = require("./middleware/logger.js");
 
 const PORT = process.env.PORT || 3000;
+
+const app = express();
 
 connectDB();
 
@@ -25,6 +25,7 @@ app.use(morgan("dev"));
 
 app.use(`/api`, require(`./api.js`));
 
+// catching all not found routes
 app.all("*", (req, res) => {
   res.status(404).json({ message: "404 Not Found" });
 });
