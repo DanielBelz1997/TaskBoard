@@ -2,12 +2,10 @@ import express from "express";
 const router = express.Router();
 import {} from "../controllers/task.js";
 
-router.get("/", getMembersDetails);
+router.get("/:id", getTask);
 
-router.post("/", addMember);
+router.post("/", createTask);
 
-router.patch("/", updateMember);
-
-router.delete("/:memberId", deleteMember);
+router.put("/:id", updateTask);
 
 module.exports = router;
