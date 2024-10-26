@@ -13,8 +13,8 @@ const taskSchema = new mongoose.Schema({
   },
   priority: {
     type: Number,
-    // not required?
   },
 });
 
 module.exports = mongoose.model("Task", taskSchema);
+
