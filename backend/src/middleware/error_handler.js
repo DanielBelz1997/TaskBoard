@@ -15,22 +15,23 @@ const { logEvents } = require("../middleware/logger");
  * @returns {void}
  */
 const errorHandler = (err, req, res, next) => {
+  const validationError =
+    err.message === "Validation failed" ? JSON.stringify(err.details) : "";
+
   logEvents(
-    `${err.name}: ${err.message}\t${req.method}\t${req.url}\t${req.headers.origin}`,
+    `${err.name}: ${err.message}\t${validationError}\t${req.method}\t${req.url}\t${req.headers.origin}`,
     "error.log"
   );
 
   console.log(err.stack);
 
-  const status = res.statusCode ? res.statusCode : 500; // server error
+  const status = err.status ? err.status : 500; // server error
 
-  res
-    .status(status)
-    .json({
-      message: err.message,
-      isError: true,
-      ...(err.details && { errors: err.details }),
-    });
+  res.status(status).json({
+    message: err.message,
+    isError: true,
+    ...(err.details && { errors: err.details }),
+  });
 };
 
 module.exports = errorHandler;

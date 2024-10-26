@@ -11,7 +11,7 @@ router.get("/:id", validateGetTaskById, getTaskById);
 
 router.post("/", validateCreateNewTask, createNewTask);
 
-router.put("/:id", updateTask);
+// router.put("/:id", updateTask);
 
 module.exports = router;
 

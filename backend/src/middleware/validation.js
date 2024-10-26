@@ -6,7 +6,7 @@ const validateGetTaskById = [
   param("id").isMongoId().withMessage("Invalid task ID format"),
   (req, res, next) => {
     const errors = validationResult(req);
-    if (!errors.isEmpty()) passToErrorHandler(errors);
+    if (!errors.isEmpty()) passToErrorHandler(errors, next);
 
     next();
   },
@@ -18,7 +18,7 @@ const validateCreateNewTask = [
   body("priority").notEmpty(),
   (req, res, next) => {
     const errors = validationResult(req);
-    if (!errors.isEmpty()) passToErrorHandler(errors);
+    if (!errors.isEmpty()) passToErrorHandler(errors, next);
 
     next();
   },

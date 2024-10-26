@@ -7,9 +7,9 @@
  *
  * @throws {Error} Throws an error with a 400 status and attaches validation details.
  */
-const passToErrorHandler = (errors) => {
+const passToErrorHandler = (errors, next) => {
   const error = new Error("Validation failed");
-  error.status = 400;
+  error.status = 404;
   error.details = errors.array();
   return next(error);
 };
