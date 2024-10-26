@@ -52,7 +52,7 @@ const getFilteredTasks = async (req, res, next) => {
     }
 
     // sorting
-    const sortBy = req.query.sortBy || "createdAt";
+    const sortBy = req.query.sortBy || "_id";
     const order = req.query.order === "desc" ? -1 : 1;
 
     // total number of tasks with filters

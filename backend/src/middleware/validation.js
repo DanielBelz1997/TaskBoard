@@ -32,8 +32,8 @@ const validateGetFilteredTasks = [
 
   query("sortBy")
     .optional()
-    .isIn(["createdAt", "priority"]) // Add any additional fields you want to allow
-    .withMessage("SortBy must be one of: createdAt, priority"),
+    .isIn(["priority"]) // add as many as you want
+    .withMessage("SortBy must be one of: priority"),
 
   query("order")
     .optional()
@@ -91,3 +91,4 @@ module.exports = {
   validateCreateNewTask,
   validateUpdateTask,
 };
+
