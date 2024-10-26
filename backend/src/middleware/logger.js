@@ -33,7 +33,7 @@ const logEvents = async (message, logFileName) => {
  * @param {Object} req
  * @param {Object} res
  * @param {Function} next
- * @description a costume middleware that logs clients requests in a file called "request.log"
+ * @description a costume middleware that logs clients requests in a file called "request.log". for development environment!
  */
 const logger = (req, res, next) => {
   logEvents(`${req.method}\t${req.url}\t${req.headers.origin}`, "request.log");
@@ -41,3 +41,4 @@ const logger = (req, res, next) => {
 };
 
 module.exports = { logEvents, logger };
+

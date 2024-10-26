@@ -5,13 +5,17 @@ const {
   validateGetTaskById,
   validateCreateNewTask,
 } = require("../middleware/validation.js");
-const { getTaskById, createNewTask } = require("../controllers/task.js");
+const {
+  getTaskById,
+  createNewTask,
+  updateTask,
+} = require("../controllers/task.js");
 
 router.get("/:id", validateGetTaskById, getTaskById);
 
 router.post("/", validateCreateNewTask, createNewTask);
 
-// router.put("/:id", updateTask);
+router.put("/:id", updateTask);
 
 module.exports = router;
 

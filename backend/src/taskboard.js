@@ -1,4 +1,6 @@
 require("dotenv").config();
+const fs = require("fs");
+const path = require("path");
 const cors = require("cors");
 const morgan = require("morgan");
 const express = require("express");
@@ -35,7 +37,7 @@ app.use(errorHandler);
 mongoose.connection.once("open", () => {
   console.log("connected to MongoDB");
   app.listen(PORT, () => {
-    console.log(`server running on port: ${PORT}`);
+    console.log(`server running on port: ${PORT} in ${app.get("env")} mode`);
   });
 });
 
