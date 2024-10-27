@@ -1,67 +1,72 @@
-import { DataGrid } from "@mui/x-data-grid";
 import Paper from "@mui/material/Paper";
+import { styled } from "@mui/material/styles";
+import TableRow from "@mui/material/TableRow";
+import TableCell, { tableCellClasses } from "@mui/material/TableCell";
+import TableBody from "@mui/material/TableBody";
+import Table from "@mui/material/Table";
+import TableHead from "@mui/material/TableHead";
+import TableContainer from "@mui/material/TableContainer";
 
-const columns = [
-  { field: "id", headerName: "ID", flex: 0.5 }, // Adjusted for small size
-  { field: "title", headerName: "Title", flex: 1 },
-  { field: "description", headerName: "Description", flex: 1 },
-  {
-    field: "priority",
-    headerName: "Priority",
-    type: "number",
-    flex: 0.5, // Smaller column size
+const StyledTableCell = styled(TableCell)(({ theme }) => ({
+  [`&.${tableCellClasses.head}`]: {
+    backgroundColor: theme.palette.common.black,
+    color: theme.palette.common.white,
   },
-];
+  [`&.${tableCellClasses.body}`]: {
+    fontSize: 14,
+  },
+}));
+
+const StyledTableRow = styled(TableRow)(({ theme }) => ({
+  "&:nth-of-type(odd)": {
+    backgroundColor: theme.palette.action.hover,
+  },
+  // hide last border
+  "&:last-child td, &:last-child th": {
+    border: 0,
+  },
+}));
+
+function createData(id, calories, fat, carbs) {
+  return { id, calories, fat, carbs };
+}
 
 const rows = [
-  { id: 1, description: "Snow", title: "Jon", priority: 3.5 },
-  { id: 2, description: "Lannister", title: "Cersei", priority: 4.2 },
-  { id: 3, description: "Lannister", title: "Jaime", priority: 4.5 },
-  { id: 4, description: "Stark", title: "Arya", priority: 1.6 },
-  { id: 5, description: "Targaryen", title: "Daenerys", priority: null },
-  { id: 6, description: "Melisandre", title: null, priority: 1.5 },
-  { id: 7, description: "Clifford", title: "Ferrara", priority: 4.4 },
-  { id: 8, description: "Frances", title: "Rossini", priority: 3.6 },
-  { id: 9, description: "Roxie", title: "Harvey", priority: 6.5 },
+  createData(1, 159, 6.0, 24),
+  createData(2, 237, 9.0, 37),
+  createData(3, 262, 16.0, 24),
+  createData(4, 305, 3.7, 67),
+  createData(5, 356, 16.0, 49),
 ];
 
-const paginationModel = { page: 0, pageSize: 10 };
+// const paginationModel = { page: 0, pageSize: 10 };
 
 export function DataTable() {
   return (
-    <Paper
-      sx={{
-        height: { xs: 600, sm: 600, md: 720 },
-        width: "100%",
-        overflow: "hidden",
-      }}>
-      <DataGrid
-        rows={rows}
-        columns={columns}
-        initialState={{ pagination: { paginationModel } }}
-        pageSizeOptions={[10, 10]}
-        checkboxSelection
-        sx={{
-          border: 0,
-          "& .MuiDataGrid-root": {
-            fontFamily: "Roboto", // Replace with your preferred font
-          },
-          "& .MuiDataGrid-cell": {
-            fontFamily: "Roboto",
-            fontSize: "14px",
-          },
-          "& .MuiDataGrid-columnHeaders": {
-            fontFamily: "Roboto",
-            fontSize: "16px",
-            fontWeight: "bold",
-          },
-          "& .MuiDataGrid-footerContainer": {
-            fontFamily: "Roboto",
-            fontSize: "14px",
-          },
-        }}
-      />
-    </Paper>
+    <TableContainer component={Paper}>
+      <Table sx={{ width: "100%", height: { sm: 400, xs: 650, md: 700 } }}>
+        <TableHead>
+          <TableRow>
+            <StyledTableCell>id</StyledTableCell>
+            <StyledTableCell align="right">Calories</StyledTableCell>
+            <StyledTableCell align="right">Fat&nbsp;(g)</StyledTableCell>
+            <StyledTableCell align="right">Carbs&nbsp;(g)</StyledTableCell>
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          {rows.map((row) => (
+            <StyledTableRow key={row.name}>
+              <StyledTableCell component="th" scope="row">
+                {row.id}
+              </StyledTableCell>
+              <StyledTableCell align="right">{row.calories}</StyledTableCell>
+              <StyledTableCell align="right">{row.fat}</StyledTableCell>
+              <StyledTableCell align="right">{row.carbs}</StyledTableCell>
+            </StyledTableRow>
+          ))}
+        </TableBody>
+      </Table>
+    </TableContainer>
   );
 }
 
