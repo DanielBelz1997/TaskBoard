@@ -9,16 +9,6 @@ import DialogActions from "@mui/material/DialogActions";
 import IconButton from "@mui/material/IconButton";
 import CloseIcon from "@mui/icons-material/Close";
 import Typography from "@mui/material/Typography";
-import Slide from "@mui/material/Slide";
-
-const BootstrapDialog = styled(Dialog)(({ theme }) => ({
-  "& .MuiDialogContent-root": {
-    padding: theme.spacing(3),
-  },
-  "& .MuiDialogActions-root": {
-    padding: theme.spacing(1),
-  },
-}));
 
 export const CustomizedDialogs = ({
   open,
@@ -29,13 +19,8 @@ export const CustomizedDialogs = ({
 }) => {
   return (
     <>
-      <BootstrapDialog
-        onClose={onClose}
-        aria-labelledby="customized-dialog-title"
-        open={open}>
-        <DialogTitle sx={{ m: 0, p: 2 }} id="customized-dialog-title">
-          {title}
-        </DialogTitle>
+      <Dialog onClose={onClose} open={open}>
+        <DialogTitle sx={{ m: 0, p: 2 }}>{title}</DialogTitle>
         <IconButton
           aria-label="close"
           onClick={onClose}
@@ -55,11 +40,9 @@ export const CustomizedDialogs = ({
           ))}
         </DialogContent>
         <DialogActions>
-          <Button autoFocus onClick={onClose}>
-            {buttonText || "Save changes"}
-          </Button>
+          <Button onClick={onClose}>{buttonText || "Save changes"}</Button>
         </DialogActions>
-      </BootstrapDialog>
+      </Dialog>
     </>
   );
 };
