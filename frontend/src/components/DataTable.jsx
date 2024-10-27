@@ -1,74 +1,10 @@
+import React from "react";
 import { DataGrid } from "@mui/x-data-grid";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import Tooltip from "@mui/material/Tooltip";
 import Paper from "@mui/material/Paper";
-
-const columns = [
-  {
-    field: "id",
-    headerName: "ID",
-    flex: 0.2,
-    align: "center",
-    headerAlign: "center",
-    filterable: false,
-    sortable: false,
-  },
-  {
-    field: "title",
-    headerName: "Title",
-    flex: 1,
-    headerAlign: "center",
-    align: "center",
-  },
-  {
-    field: "description",
-    headerName: "Description",
-    flex: 1,
-  },
-  {
-    field: "priority",
-    headerName: "Priority",
-    type: "number",
-    headerAlign: "center",
-    align: "center",
-    flex: 0.5,
-  },
-  {
-    field: "actions",
-    headerName: "Actions",
-    headerAlign: "center",
-    flex: 0.5,
-    renderCell: (params) => (
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          height: "100%", // Ensures the full height of the cell is used
-        }}>
-        <Tooltip title="Update">
-          <EditIcon
-            onClick={(e) => {
-              e.stopPropagation();
-              console.log(params.id);
-            }}
-            style={{ cursor: "pointer", marginRight: "8px" }}
-          />
-        </Tooltip>
-        <Tooltip title="Delete">
-          <DeleteIcon
-            onClick={(e) => {
-              e.stopPropagation();
-              console.log(params.id);
-            }}
-            style={{ cursor: "pointer", color: "red" }}
-          />
-        </Tooltip>
-      </div>
-    ),
-  },
-];
+import { CustomizedDialogs } from "../components/Dialog.jsx";
 
 const rows = [
   {
@@ -181,6 +117,87 @@ const rows = [
 const paginationModel = { page: 0, pageSize: 10 };
 
 export function DataTable() {
+  const [open, setOpen] = React.useState(false);
+  const [selectedRow, setSelectedRow] = React.useState(null);
+
+  const handleEditOpen = (row) => {
+    setSelectedRow(row);
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setSelectedRow(null);
+    setOpen(false);
+  };
+
+  const renderActions = (params) => (
+    <div
+      style={{
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        height: "100%",
+      }}>
+      <Tooltip title="Update">
+        <EditIcon
+          onClick={(e) => {
+            e.stopPropagation();
+            handleEditOpen(params.row);
+          }}
+          style={{ cursor: "pointer", marginRight: "8px" }}
+        />
+      </Tooltip>
+      <Tooltip title="Delete">
+        <DeleteIcon
+          onClick={(e) => {
+            e.stopPropagation();
+            console.log(params.id);
+          }}
+          style={{ cursor: "pointer", color: "red" }}
+        />
+      </Tooltip>
+    </div>
+  );
+
+  const columns = [
+    {
+      field: "id",
+      headerName: "ID",
+      flex: 0.2,
+      align: "center",
+      headerAlign: "center",
+      filterable: false,
+      sortable: false,
+    },
+    {
+      field: "title",
+      headerName: "Title",
+      flex: 1,
+      headerAlign: "center",
+      align: "center",
+    },
+    {
+      field: "description",
+      headerName: "Description",
+      flex: 1,
+    },
+    {
+      field: "priority",
+      headerName: "Priority",
+      type: "number",
+      headerAlign: "center",
+      align: "center",
+      flex: 0.5,
+    },
+    {
+      field: "actions",
+      headerName: "Actions",
+      headerAlign: "center",
+      flex: 0.5,
+      renderCell: (params) => renderActions(params),
+    },
+  ];
+
   return (
     <Paper
       sx={{
@@ -200,6 +217,17 @@ export function DataTable() {
             outline: "none !important",
           },
         }}
+      />
+      <CustomizedDialogs
+        open={open}
+        onClose={handleClose}
+        title="Edit Item"
+        content={[
+          `Title: ${selectedRow?.title || ""}`,
+          `Description: ${selectedRow?.description || ""}`,
+          `Priority: ${selectedRow?.priority || ""}`,
+        ]}
+        buttonText="Save Changes"
       />
     </Paper>
   );
