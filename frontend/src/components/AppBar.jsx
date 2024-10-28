@@ -1,14 +1,15 @@
-import { styled, alpha } from "@mui/material/styles";
-import AssignmentOutlinedIcon from "@mui/icons-material/AssignmentOutlined";
-import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
+import AppBar from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
-import Typography from "@mui/material/Typography";
 import InputBase from "@mui/material/InputBase";
+import Typography from "@mui/material/Typography";
 import SearchIcon from "@mui/icons-material/Search";
-import { ThemeToggle } from "../components/ThemeToggle.jsx";
+import { styled, alpha } from "@mui/material/styles";
 import { useDispatch, useSelector } from "react-redux";
+import AssignmentOutlinedIcon from "@mui/icons-material/AssignmentOutlined";
+
 import { toggleTheme } from "../redux/themeSlice.js";
+import { ThemeToggle } from "../components/ThemeToggle.jsx";
 
 const Search = styled("div")(({ theme }) => ({
   position: "relative",

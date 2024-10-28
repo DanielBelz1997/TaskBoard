@@ -1,7 +1,6 @@
 import { PropTypes } from "prop-types";
 
 export const Form = ({ register, errors, updateTaskDetails }) => {
-  console.log(updateTaskDetails);
   return (
     <form>
       <div>
@@ -67,3 +66,4 @@ Form.propTypes = {
     description: PropTypes.string,
   }).isRequired,
 };
+

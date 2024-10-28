@@ -1,12 +1,13 @@
-import { useDispatch, useSelector } from "react-redux";
-import { DataTable } from "../components/DataTable";
 import Button from "@mui/material/Button";
+import { useForm } from "react-hook-form";
 import SendIcon from "@mui/icons-material/Send";
+import { useDispatch, useSelector } from "react-redux";
+
+import { Form } from "../components/Form.jsx";
+import { DataTable } from "../components/TasksTable/DataTable";
+import { useAddTask } from "../hooks/useCreateTask.js";
 import { openDialog, closeDialog } from "../redux/createDialogSlice.js";
 import { DialogComponent } from "../components/DialogComponent.jsx";
-import { Form } from "../components/Form.jsx";
-import { useForm } from "react-hook-form";
-import { useAddTask } from "../hooks/useCreateTask.js";
 
 export const Home = () => {
   const {
@@ -15,6 +16,7 @@ export const Home = () => {
     reset,
     formState: { errors },
   } = useForm();
+
   const addTaskMutation = useAddTask();
 
   const handleAddTask = (values) => {
@@ -41,7 +43,7 @@ export const Home = () => {
   const handleCreateClose = () => {
     dispatch(closeDialog());
   };
-  
+
   return (
     <>
       <Button
@@ -67,3 +69,4 @@ export const Home = () => {
     </>
   );
 };
+

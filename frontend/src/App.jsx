@@ -1,11 +1,13 @@
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { useSelector } from "react-redux";
 import { CssBaseline, ThemeProvider } from "@mui/material";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
 
-import "./App.css";
+import Layout from "./layout";
+import { NotFound } from "./pages/NotFound.jsx";
 import { theme } from "./theme.js";
 import { Home } from "./pages/Home";
-import Layout from "./layout";
-import { useSelector } from "react-redux";
+
+import "./App.css";
 
 function App() {
   const isDarkMode = useSelector((state) => state.theme.isDarkMode);
@@ -15,7 +17,7 @@ function App() {
       <CssBaseline />
       <BrowserRouter>
         <Routes>
-          <Route path="*" element={<div>not found bro</div>} />
+          <Route path="*" element={<NotFound />} />
           <Route path="/" element={<Layout />}>
             <Route index element={<Home />} />
           </Route>

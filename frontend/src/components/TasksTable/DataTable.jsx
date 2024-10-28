@@ -1,36 +1,42 @@
+import { useEffect } from "react";
+import Paper from "@mui/material/Paper";
+import { useForm } from "react-hook-form";
+import Tooltip from "@mui/material/Tooltip";
 import { DataGrid } from "@mui/x-data-grid";
+import InfoIcon from "@mui/icons-material/Info";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
-import Tooltip from "@mui/material/Tooltip";
-import Paper from "@mui/material/Paper";
-import { DialogComponent } from "./DialogComponent.jsx";
 import { useDispatch, useSelector } from "react-redux";
-import { Form } from "../components/Form.jsx";
-import { useForm } from "react-hook-form";
+
+import { Form } from "../Form.jsx";
+import { Loader } from "../Loader/index.jsx";
+import { DisplayTask } from "../DisplayTask.jsx";
+import { DialogComponent } from "../DialogComponent.jsx";
+import { useUpdateTask } from "../../hooks/useUpdateTask.js";
+import { useTasks } from "../../hooks/useGetFilteredTasks.js";
+import { useGetTaskById } from "../../hooks/useGetTaskById.js";
+import { setRows, setRow, updateRow } from "../../redux/apiSlice.js";
 import {
   openUpdateDialog,
   closeUpdateDialog,
-} from "../redux/updateDialogSlice.js";
-import { openInfoDialog, closeInfoDialog } from "../redux/infoDialogSlice.js";
-import { useEffect } from "react";
-import { setRows, setRow, updateRow } from "../redux/apiSlice.js";
-import { useTasks } from "../hooks/useGetFilteredTasks";
-import { Loader } from "./Loader/index.jsx";
-import InfoIcon from "@mui/icons-material/Info";
-import { useGetTaskById } from "../hooks/useGetTaskById.js";
-import { useUpdateTask } from "../hooks/useUpdateTask.js";
+} from "../../redux/updateDialogSlice.js";
+import {
+  openInfoDialog,
+  closeInfoDialog,
+} from "../../redux/infoDialogSlice.js";
 
 const paginationModel = { page: 0, pageSize: 10 };
 
 export function DataTable() {
   const dispatch = useDispatch();
-  const { data: tasks, isLoading, error } = useTasks();
   const { open: editOpen, selectedUpdateRowId } = useSelector(
     (state) => state.updateDialog
   );
   const { open: infoOpen, selectedRowId } = useSelector(
     (state) => state.infoDialog
   );
+
+  const { data: tasks, isLoading, error } = useTasks();
 
   const { data: taskDetails } = useGetTaskById(
     selectedRowId ? selectedRowId : null
@@ -40,14 +46,14 @@ export function DataTable() {
     selectedUpdateRowId?._id ? selectedUpdateRowId?._id : null
   );
 
+  const updateTaskMutation = useUpdateTask(selectedUpdateRowId?._id);
+
   const {
     register,
     handleSubmit,
     reset,
     formState: { errors },
   } = useForm();
-
-  const updateTaskMutation = useUpdateTask(selectedUpdateRowId?._id);
 
   const handleUpdateTask = (values) => {
     updateTaskMutation.mutate(
@@ -57,11 +63,11 @@ export function DataTable() {
       },
       {
         onSuccess: (updatedData) => {
-          dispatch(updateRow(updatedData._id)); // Ensure row updates in Redux
+          dispatch(updateRow(updatedData._id));
           reset({
             title: updatedData.title,
             description: updatedData.description,
-          }); // Reset form with updated values
+          });
         },
       }
     );
@@ -174,6 +180,8 @@ export function DataTable() {
         rows={tasks}
         getRowId={(row) => row._id}
         columns={columns}
+        pageSizeOptions={[5, 10]}
+        disableRowSelectionOnClick
         initialState={{
           pagination: { paginationModel },
           columns: {
@@ -182,8 +190,6 @@ export function DataTable() {
             },
           },
         }}
-        pageSizeOptions={[5, 10]}
-        disableRowSelectionOnClick
         sx={{
           border: 0,
           "&.MuiDataGrid-root .MuiDataGrid-cell:focus-within": {
@@ -199,15 +205,7 @@ export function DataTable() {
         acceptFun={null}
         acceptText={null}
         acceptIcon={null}>
-        {taskDetails ? (
-          <>
-            <div>Title: {taskDetails?.title}</div>
-            <div>Description: {taskDetails?.description}</div>
-            <div>Priority: {taskDetails?.priority}</div>
-          </>
-        ) : (
-          <div>Loading...{}</div>
-        )}
+        {taskDetails ? <DisplayTask taskDetails={taskDetails} /> : <Loader />}
       </DialogComponent>
       <DialogComponent
         open={editOpen}
