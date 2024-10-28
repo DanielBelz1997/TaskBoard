@@ -1,11 +1,11 @@
 import { configureStore } from "@reduxjs/toolkit";
 
 import { uiSlice } from "./uiSlice.js";
+import { apiSlice } from "./apiSlice.js";
 import { themeSlice } from "./themeSlice.js";
+import { infoDialogSlice } from "./infoDialogSlice.js";
 import { updateDialogSlice } from "./updateDialogSlice.js";
 import { createDialogSlice } from "./createDialogSlice.js";
-import { infoDialogSlice } from "./infoDialogSlice.js";
-import { apiSlice } from "./apiSlice.js";
 
 export const store = configureStore({
   reducer: {
@@ -17,3 +17,4 @@ export const store = configureStore({
     infoDialog: infoDialogSlice.reducer,
   },
 });
+
