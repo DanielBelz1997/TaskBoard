@@ -12,7 +12,7 @@ import {
   closeUpdateDialog,
 } from "../redux/updateDialogSlice.js";
 import { openInfoDialog, closeInfoDialog } from "../redux/infoDialogSlice.js";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { setRows, setRow, updateRow } from "../redux/apiSlice.js";
 import { useTasks } from "../hooks/useGetFilteredTasks";
 import { Loader } from "./Loader/index.jsx";
@@ -20,17 +20,16 @@ import InfoIcon from "@mui/icons-material/Info";
 import { useGetTaskById } from "../hooks/useGetTaskById.js";
 import { useUpdateTask } from "../hooks/useUpdateTask.js";
 
-const paginationModel = { page: 0, pageSize: 10 };
-
 export function DataTable() {
   const dispatch = useDispatch();
-  const { data: tasks, isLoading, error } = useTasks();
   const { open: editOpen, selectedUpdateRowId } = useSelector(
     (state) => state.updateDialog
   );
   const { open: infoOpen, selectedRowId } = useSelector(
     (state) => state.infoDialog
   );
+
+  const { data: tasksData, isLoading, isError } = useTasks();
 
   const { data: taskDetails } = useGetTaskById(
     selectedRowId ? selectedRowId : null
@@ -39,6 +38,14 @@ export function DataTable() {
   const { data: updateTaskDetails } = useGetTaskById(
     selectedUpdateRowId?._id ? selectedUpdateRowId?._id : null
   );
+
+  const [pageState, setPageState] = useState({
+    isLoading: false,
+    data: [],
+    total: 0,
+    page: 1,
+    pageSize: 10,
+  });
 
   const {
     register,
@@ -68,14 +75,35 @@ export function DataTable() {
   };
 
   useEffect(() => {
-    if (tasks) {
-      dispatch(setRows(tasks));
+    if (tasksData) {
+      dispatch(setRows(tasksData));
     }
-  }, [tasks, dispatch]);
+  }, [tasksData, dispatch]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      setPageState((old) => ({
+        ...old,
+        isLoading: true,
+      }));
+      const res = await fetch(
+        `http://localhost:3000/api/tasks?page=${pageState.page}&limit${pageState.pageSize}`
+      );
+      const json = await res.json();
+
+      console.log(json);
+      setPageState((old) => ({
+        ...old,
+        isLoading: false,
+        data: json.tasks,
+        total: json.totalTasks,
+      }));
+    };
+    fetchData();
+  }, [pageState.page, pageState.pageSize]);
 
   if (isLoading) return <Loader />;
-  if (!tasks || !tasks.length) return <>no data...</>;
-  if (error) return <>{error}</>;
+  if (isError) return <div>Error fetching data</div>;
 
   const handleEditOpen = (row) => {
     dispatch(openUpdateDialog(row));
@@ -171,18 +199,29 @@ export function DataTable() {
         overflow: "hidden",
       }}>
       <DataGrid
-        rows={tasks}
+        rows={pageState.data}
+        rowCount={pageState.total}
+        loading={pageState.isLoading}
         getRowId={(row) => row._id}
+        pageSizeOptions={[10, 20, 30]}
+        pagination
+        page={pageState.page - 1}
+        pageSize={pageState.pageSize}
+        paginationMode="server"
+        onPageChange={(newPage) =>
+          setPageState((old) => ({ ...old, page: newPage }))
+        }
+        onPageSizeChange={(newPageSize) =>
+          setPageState((old) => ({ ...old, pageSize: newPageSize }))
+        }
         columns={columns}
         initialState={{
-          pagination: { paginationModel },
           columns: {
             columnVisibilityModel: {
               _id: false,
             },
           },
         }}
-        pageSizeOptions={[5, 10]}
         disableRowSelectionOnClick
         sx={{
           border: 0,
