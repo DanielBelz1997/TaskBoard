@@ -1,6 +1,5 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { createTask } from "../../api/tasks";
-import { toast } from "react-toastify";
+import { createTask } from "../api/task";
 
 export const useAddTask = () => {
   const queryClient = useQueryClient();
@@ -9,10 +8,10 @@ export const useAddTask = () => {
     mutationFn: createTask,
     onSuccess() {
       queryClient.invalidateQueries({ queryKey: ["tasks"] });
-      toast.success("task created!");
+      // toast.success("task created!");
     },
     onError(res) {
-      toast.error("action failed. please try again later");
+      // toast.error("action failed. please try again later");
       console.log(res);
     },
   });

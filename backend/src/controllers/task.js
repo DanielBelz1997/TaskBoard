@@ -83,9 +83,11 @@ const getFilteredTasks = async (req, res, next) => {
 // @access Private
 const createNewTask = async (req, res, next) => {
   try {
-    const { title, description, priority } = req.body;
+    const { title, description } = req.body;
 
-    const task = new Task({ title, description, priority });
+    const task = new Task({ title, description });
+
+    // implement logic of priority
 
     await task.save();
 

@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-export const dialogSlice = createSlice({
-  name: "dialog",
+export const updateDialogSlice = createSlice({
+  name: "updateDialog",
   initialState: {
     open: false,
     selectedRow: null,
@@ -18,4 +18,4 @@ export const dialogSlice = createSlice({
   },
 });
 
-export const { openDialog, closeDialog } = dialogSlice.actions;
+export const { openDialog, closeDialog } = updateDialogSlice.actions;

@@ -10,7 +10,6 @@ header {
   top: 0;
   z-index: 10;
   background: #f8f9fa; /* Background color */
-  padding: 1rem;
 }
 
 .content {
@@ -20,7 +19,6 @@ header {
 
 footer {
   background: #f1f1f1; /* Background color */
-  padding: 1rem;
   text-align: center;
 }
 

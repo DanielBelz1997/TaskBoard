@@ -50,10 +50,6 @@ const validateGetFilteredTasks = [
 const validateCreateNewTask = [
   body("title").notEmpty().withMessage("Title is required"),
   body("description").notEmpty().withMessage("Description is required"),
-  body("priority")
-    .notEmpty()
-    .isFloat({ min: 0, max: 10 })
-    .withMessage("Priority must be a non-negative integer"),
   (req, res, next) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) passToErrorHandler(errors, next);

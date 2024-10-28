@@ -1,10 +1,8 @@
 import axios from "axios";
 
-export const getFilteredTasks = async (param) => {
-  const response = await axios.get(import.meta.env.VITE_API_URL, {
-    params: param ? { param } : {},
-  });
-  return response.data;
+export const getFilteredTasks = async () => {
+  const response = await axios.get(`${import.meta.env.VITE_API_URL}/tasks`);
+  return response.data.tasks;
 };
 
 export const getTask = async (id) => {
@@ -15,7 +13,10 @@ export const getTask = async (id) => {
 };
 
 export const createTask = async (task) => {
-  const response = await axios.post(import.meta.env.VITE_API_URL, task);
+  const response = await axios.post(
+    `${import.meta.env.VITE_API_URL}/tasks`,
+    task
+  );
   return response.data;
 };
 

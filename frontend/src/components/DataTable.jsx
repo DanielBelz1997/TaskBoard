@@ -3,19 +3,29 @@ import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import Tooltip from "@mui/material/Tooltip";
 import Paper from "@mui/material/Paper";
-import { CustomizedDialogs } from "../components/Dialog.jsx";
+import { DialogComponent } from "./DialogComponent.jsx";
 import { useDispatch, useSelector } from "react-redux";
-import { openDialog, closeDialog } from "../redux/dialogSlice.js";
+import { openDialog, closeDialog } from "../redux/updateDialogSlice.js";
+import { useEffect } from "react";
+import { setRows } from "../redux/apiSlice.js";
+import { useTasks } from "../hooks/useGetFilteredTasks";
+import { Loader } from "./Loader/index.jsx";
 
 const paginationModel = { page: 0, pageSize: 10 };
 
 export function DataTable() {
   const dispatch = useDispatch();
-  const rows = useSelector((state) => {
-    console.log(state);
-    return state.api.rows;
+  const { data: tasks, isLoading, error } = useTasks();
+  const { open, selectedRow } = useSelector((state) => state.updateDialog);
+
+  useEffect(() => {
+    if (tasks) {
+      dispatch(setRows(tasks));
+    }
   });
-  const { open, selectedRow } = useSelector((state) => state.dialog);
+
+  if (isLoading) return <Loader />;
+  if (error) return <>{error}</>;
 
   const handleEditOpen = (row) => {
     dispatch(openDialog(row));
@@ -56,15 +66,6 @@ export function DataTable() {
 
   const columns = [
     {
-      field: "id",
-      headerName: "ID",
-      flex: 0.2,
-      align: "center",
-      headerAlign: "center",
-      filterable: false,
-      sortable: false,
-    },
-    {
       field: "title",
       headerName: "Title",
       flex: 1,
@@ -74,7 +75,7 @@ export function DataTable() {
     {
       field: "description",
       headerName: "Description",
-      flex: 1,
+      flex: 4,
     },
     {
       field: "priority",
@@ -101,7 +102,8 @@ export function DataTable() {
         overflow: "hidden",
       }}>
       <DataGrid
-        rows={rows}
+        rows={tasks}
+        getRowId={(row) => row._id}
         columns={columns}
         initialState={{ pagination: { paginationModel } }}
         pageSizeOptions={[5, 10]}
@@ -113,7 +115,7 @@ export function DataTable() {
           },
         }}
       />
-      <CustomizedDialogs
+      <DialogComponent
         open={open}
         onClose={handleClose}
         title="Edit Item"
