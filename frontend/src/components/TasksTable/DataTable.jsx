@@ -178,10 +178,11 @@ export function DataTable() {
       }}>
       <DataGrid
         rows={tasks}
-        getRowId={(row) => row._id}
         columns={columns}
+        paginationMode="server"
         pageSizeOptions={[5, 10]}
         disableRowSelectionOnClick
+        getRowId={(row) => row._id}
         initialState={{
           pagination: { paginationModel },
           columns: {
