@@ -4,18 +4,18 @@ export const updateDialogSlice = createSlice({
   name: "updateDialog",
   initialState: {
     open: false,
-    selectedRow: null,
   },
   reducers: {
-    openDialog: (state, action) => {
-      state.selectedRow = null;
+    openUpdateDialog: (state, action) => {
       state.open = true;
-      state.selectedRow = action.payload;
+      state.selectedUpdateRowId = action.payload;
     },
-    closeDialog: (state) => {
+    closeUpdateDialog: (state) => {
       state.open = false;
+      state.selectedUpdateRowId = null;
     },
   },
 });
 
-export const { openDialog, closeDialog } = updateDialogSlice.actions;
+export const { openUpdateDialog, closeUpdateDialog } =
+  updateDialogSlice.actions;

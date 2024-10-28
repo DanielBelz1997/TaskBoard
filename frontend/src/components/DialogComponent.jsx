@@ -41,9 +41,11 @@ export function DialogComponent({
           Close
         </Button>
 
-        <Button startIcon={acceptIcon} onClick={acceptFun}>
-          {acceptText}
-        </Button>
+        {acceptFun && (
+          <Button startIcon={acceptIcon} onClick={acceptFun}>
+            {acceptText}
+          </Button>
+        )}
       </DialogActions>
     </Dialog>
   );

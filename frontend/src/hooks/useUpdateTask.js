@@ -1,19 +1,21 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { updateTask } from "../../api/tasks";
-import { toast } from "react-toastify";
+import { updateTask } from "../api/task";
 
-export const useUpdateMember = () => {
+export const useUpdateTask = (id) => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: updateTask,
+    mutationFn: (task) => updateTask({ id, task }),
     onSuccess() {
       queryClient.invalidateQueries({ queryKey: ["tasks"] });
-      toast.success("updated!");
+      if (id) {
+        queryClient.invalidateQueries({ queryKey: ["tasks", id] });
+      }
+      // toast.success("updated!");
     },
     onError(res) {
       console.error(res);
-      toast.error("action failed. please try again");
+      // toast.error("action failed. please try again");
     },
   });
 };

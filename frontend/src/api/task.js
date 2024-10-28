@@ -21,8 +21,8 @@ export const createTask = async (task) => {
 };
 
 export const updateTask = async ({ id, task }) => {
-  const response = await axios.patch(
-    `${import.meta.env.VITE_API_URL}/${id}`,
+  const response = await axios.put(
+    `${import.meta.env.VITE_API_URL}/tasks/${id}`,
     task
   );
 

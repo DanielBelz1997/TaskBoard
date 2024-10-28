@@ -18,7 +18,6 @@ export const Home = () => {
   const addTaskMutation = useAddTask();
 
   const handleAddTask = (values) => {
-    console.log(values);
     addTaskMutation.mutate(
       {
         title: values.title,
@@ -42,6 +41,7 @@ export const Home = () => {
   const handleCreateClose = () => {
     dispatch(closeDialog());
   };
+  
   return (
     <>
       <Button

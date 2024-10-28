@@ -1,6 +1,7 @@
 import { PropTypes } from "prop-types";
 
-export const Form = ({ register, errors }) => {
+export const Form = ({ register, errors, updateTaskDetails }) => {
+  console.log(updateTaskDetails);
   return (
     <form>
       <div>
@@ -16,6 +17,7 @@ export const Form = ({ register, errors }) => {
         <input
           id="title"
           type="text"
+          defaultValue={updateTaskDetails?.title}
           style={{ width: "30vh", height: "3vw" }}
           {...register("title", { required: "Title is required" })}
         />
@@ -37,8 +39,9 @@ export const Form = ({ register, errors }) => {
           Description
         </label>
         <textarea
+          defaultValue={updateTaskDetails?.description}
           id="description"
-          style={{ width: "50vh", height: "7vw" }}
+          style={{ width: "40vh", height: "7vw" }}
           {...register("description", { required: "Description is required" })}
         />
         {errors.description && (
@@ -48,6 +51,7 @@ export const Form = ({ register, errors }) => {
     </form>
   );
 };
+
 Form.propTypes = {
   register: PropTypes.func.isRequired,
   errors: PropTypes.shape({
@@ -57,5 +61,9 @@ Form.propTypes = {
     description: PropTypes.shape({
       message: PropTypes.string,
     }),
+  }).isRequired,
+  updateTaskDetails: PropTypes.shape({
+    title: PropTypes.string,
+    description: PropTypes.string,
   }).isRequired,
 };
