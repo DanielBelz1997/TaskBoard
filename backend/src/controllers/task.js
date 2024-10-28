@@ -2,6 +2,7 @@ const NodeCache = require("node-cache");
 const cache = new NodeCache({ stdTTL: 60 });
 
 const Task = require("../models/Task.js");
+const { priorityCalculation } = require("../utils/priority_calculation.js");
 
 // @desc Get one task
 // @route GET /tasks/:id
@@ -85,9 +86,9 @@ const createNewTask = async (req, res, next) => {
   try {
     const { title, description } = req.body;
 
-    const task = new Task({ title, description });
+    const priority = priorityCalculation(title, description);
 
-    // implement logic of priority
+    const task = new Task({ title, description, priority });
 
     await task.save();
 
@@ -104,7 +105,9 @@ const updateTask = async (req, res, next) => {
   try {
     const { id } = req.params;
 
-    const { title, description, priority } = req.body;
+    const { title, description } = req.body;
+
+    const priority = priorityCalculation(title, description);
 
     const task = await Task.findById(id);
 

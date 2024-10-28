@@ -67,12 +67,6 @@ const validateUpdateTask = [
     .optional()
     .notEmpty()
     .withMessage("Description cannot be empty if provided"),
-  body("priority")
-    .optional()
-    .isFloat({ min: 0, max: 10 })
-    .withMessage(
-      "Priority must be a non-negative integer between 0 and 10 if provided"
-    ),
   (req, res, next) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) return passToErrorHandler(errors, next);
