@@ -32,8 +32,8 @@ const validateGetFilteredTasks = [
 
   query("sortBy")
     .optional()
-    .isIn(["priority"]) // add as many as you want
-    .withMessage("SortBy must be one of: priority"),
+    .isIn(["priority", "createdAt"]) // add as many as you want
+    .withMessage("SortBy must be one of: priority, createdAt"),
 
   query("order")
     .optional()
