@@ -25,13 +25,11 @@ import {
   closeInfoDialog,
 } from "../../redux/infoDialogSlice.js";
 
-const defaultPageSize = 10;
-
 export function DataTable() {
   const dispatch = useDispatch();
   const [paginationModel, setPaginationModel] = React.useState({
     page: 0,
-    pageSize: defaultPageSize,
+    pageSize: 10,
   });
   const { open: editOpen, selectedUpdateRowId } = useSelector(
     (state) => state.updateDialog
@@ -45,6 +43,8 @@ export function DataTable() {
     isLoading,
     error,
   } = useTasks(paginationModel.page + 1, paginationModel.pageSize);
+
+  console.log(tasks);
 
   const { data: taskDetails } = useGetTaskById(
     selectedRowId ? selectedRowId : null
@@ -87,8 +87,10 @@ export function DataTable() {
     }
   }, [tasks, dispatch]);
 
+  console.log(tasks);
+
   if (isLoading) return <Loader />;
-  if (!tasks.tasks || !tasks.tasks.length) return <>no data...</>;
+  if (!tasks?.tasks || !tasks?.tasks?.length) return <>no data...</>;
   if (error) return <>{error}</>;
 
   const handleEditOpen = (row) => {
@@ -110,12 +112,14 @@ export function DataTable() {
     dispatch(closeInfoDialog());
   };
 
-  const handlePageChange = (newPage) => {
-    setPaginationModel((prev) => ({ ...prev, page: newPage }));
+  const handlePageSizeChange = (newPageSize) => {
+    console.log(newPageSize);
+    setPaginationModel({ page: 0, pageSize: newPageSize });
   };
 
-  const handlePageSizeChange = (newPageSize) => {
-    setPaginationModel({ page: 0, pageSize: newPageSize });
+  const handlePaginationChange = (newModel) => {
+    console.log("Pagination model changed:", newModel);
+    setPaginationModel(newModel); // Update state
   };
 
   const renderActions = (params) => (
@@ -193,14 +197,15 @@ export function DataTable() {
         overflow: "hidden",
       }}>
       <DataGrid
-        rows={tasks.tasks} // Using the paginated tasks
+        rows={tasks?.tasks || []} // Using the paginated tasks
         columns={columns}
         paginationMode="server"
-        rowCount={tasks.meta.totalPages * paginationModel.pageSize} // Total rows based on server response
+        rowCount={tasks?.meta?.totalTasks} // Total rows based on server response
         pageSizeOptions={[5, 10, 20]}
-        pageSize={paginationModel.pageSize}
+        pageSize={tasks.meta.pageSize}
         page={paginationModel.page}
-        onPageChange={handlePageChange}
+        paginationModel={paginationModel}
+        onPaginationModelChange={handlePaginationChange}
         onPageSizeChange={handlePageSizeChange}
         disableRowSelectionOnClick
         getRowId={(row) => row._id}
