@@ -35,3 +35,11 @@ export const updateTask = async ({ id, task }) => {
   return response.data;
 };
 
+export const deleteTask = async (id) => {
+  const response = await axios.delete(
+    `${import.meta.env.VITE_API_URL}/tasks/${id}`
+  );
+
+  return response.data;
+};
+

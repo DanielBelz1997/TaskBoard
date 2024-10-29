@@ -75,10 +75,21 @@ const validateUpdateTask = [
   },
 ];
 
+const validateDeleteTaskById = [
+  param("id").isMongoId().withMessage("Invalid task ID format"),
+  (req, res, next) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) passToErrorHandler(errors, next);
+
+    next();
+  },
+];
+
 module.exports = {
   validateGetTaskById,
   validateGetFilteredTasks,
   validateCreateNewTask,
   validateUpdateTask,
+  validateDeleteTaskById,
 };
 

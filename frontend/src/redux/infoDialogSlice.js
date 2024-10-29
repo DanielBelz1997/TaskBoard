@@ -18,3 +18,4 @@ export const infoDialogSlice = createSlice({
 });
 
 export const { openInfoDialog, closeInfoDialog } = infoDialogSlice.actions;
+

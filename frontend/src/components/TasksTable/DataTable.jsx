@@ -25,6 +25,7 @@ import {
   openInfoDialog,
   closeInfoDialog,
 } from "../../redux/infoDialogSlice.js";
+import { useDeleteTask } from "../../hooks/useDeleteTask.js";
 
 // eslint-disable-next-line react/prop-types
 export const DataTable = ({ searchTerm }) => {
@@ -45,6 +46,8 @@ export const DataTable = ({ searchTerm }) => {
     isLoading,
     error,
   } = useTasks(paginationModel.page + 1, paginationModel.pageSize);
+
+  const deleteTaskMutation = useDeleteTask();
 
   const filteredTasks = React.useMemo(
     () =>
@@ -101,7 +104,7 @@ export const DataTable = ({ searchTerm }) => {
 
   console.log(tasks);
 
-  if (isLoading && !tasks?.tasks) return <Loader />;
+  if (isLoading) return <Loader />;
   if (!tasks?.tasks || !tasks?.tasks?.length) return <>no data...</>;
   if (error) return <>{error}</>;
 
@@ -131,6 +134,10 @@ export const DataTable = ({ searchTerm }) => {
 
   const handlePaginationChange = (newModel) => {
     setPaginationModel(newModel);
+  };
+
+  const handleDeleteTask = (id) => {
+    deleteTaskMutation.mutate(id);
   };
 
   const renderActions = (params) => (
@@ -163,7 +170,7 @@ export const DataTable = ({ searchTerm }) => {
         <DeleteIcon
           onClick={(e) => {
             e.stopPropagation();
-            console.log(params.row._id);
+            handleDeleteTask(params.row._id);
           }}
           style={{ cursor: "pointer", color: "red" }}
         />
@@ -279,7 +286,7 @@ export const DataTable = ({ searchTerm }) => {
         acceptFun={null}
         acceptText={null}
         acceptIcon={null}>
-        {taskDetails ? <DisplayTask taskDetails={taskDetails} /> : <Loader />}
+        {taskDetails && <DisplayTask taskDetails={taskDetails} />}
       </DialogComponent>
       <DialogComponent
         open={editOpen}
