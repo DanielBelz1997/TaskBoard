@@ -2,6 +2,10 @@
 
 TaskBoard is a task management application built with React, Redux, Material-UI, and React Query. It provides an efficient and user-friendly interface for organizing and managing tasks with essential features like server-side pagination, sorting, and search capabilities.
 
+# Demonstration
+
+[Watch Demo](./taskBoard.mp4)
+
 ## Features
 
 - **Task Management**: Add, view, update, and delete tasks seamlessly.
@@ -144,3 +148,4 @@ If you want to contact me about the project, please feel free to contact me on e
 ---
 
 Feel free to customize or expand the project based on your needs!
+
