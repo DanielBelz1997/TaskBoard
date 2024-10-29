@@ -4,9 +4,7 @@ TaskBoard is a task management application built with React, Redux, Material-UI,
 
 # Demonstration
 
-
 https://github.com/user-attachments/assets/a7fb7462-aea3-49bf-be57-9c2e94c4de0f
-
 
 ## Features
 
@@ -146,8 +144,4 @@ This project is licensed under the MIT License.
 ## Contact Info
 
 If you want to contact me about the project, please feel free to contact me on email: belzdaniel6@gmail.com
-
----
-
-Feel free to customize or expand the project based on your needs!
 
