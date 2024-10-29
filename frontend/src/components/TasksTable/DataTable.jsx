@@ -25,7 +25,7 @@ import {
   closeInfoDialog,
 } from "../../redux/infoDialogSlice.js";
 
-export function DataTable() {
+export const DataTable = ({ searchTerm }) => {
   const dispatch = useDispatch();
   const [paginationModel, setPaginationModel] = React.useState({
     page: 0,
@@ -44,7 +44,13 @@ export function DataTable() {
     error,
   } = useTasks(paginationModel.page + 1, paginationModel.pageSize);
 
-  console.log(tasks);
+  const filteredTasks = React.useMemo(() => tasks?.tasks?.filter(
+    (task) =>
+      // eslint-disable-next-line react/prop-types
+      task.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      // eslint-disable-next-line react/prop-types
+      task.description.toLowerCase().includes(searchTerm.toLowerCase())
+  ), [searchTerm, tasks]);
 
   const { data: taskDetails } = useGetTaskById(
     selectedRowId ? selectedRowId : null
@@ -196,7 +202,7 @@ export function DataTable() {
         overflow: "hidden",
       }}>
       <DataGrid
-        rows={tasks?.tasks || []} // Using the paginated tasks
+        rows={filteredTasks || []} // Using the paginated tasks
         columns={columns}
         paginationMode="server"
         rowCount={tasks?.meta?.totalTasks} // Total rows based on server response
@@ -250,5 +256,5 @@ export function DataTable() {
       </DialogComponent>
     </Paper>
   );
-}
+};
 
