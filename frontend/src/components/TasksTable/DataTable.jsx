@@ -39,7 +39,7 @@ import { useAddTask } from "../../hooks/useCreateTask.js";
 import { Action } from "../snackAction.jsx";
 
 // eslint-disable-next-line react/prop-types
-export const DataTable = ({ searchTerm }) => {
+export const DataTable = ({ searchTerm, sortOption }) => {
   const dispatch = useDispatch();
   const [paginationModel, setPaginationModel] = React.useState({
     page: 0,
@@ -58,7 +58,7 @@ export const DataTable = ({ searchTerm }) => {
     data: tasks,
     isLoading,
     error,
-  } = useTasks(paginationModel.page + 1, paginationModel.pageSize);
+  } = useTasks(paginationModel.page + 1, paginationModel.pageSize, sortOption);
 
   const [lastTask, setLastTask] = React.useState(null);
 

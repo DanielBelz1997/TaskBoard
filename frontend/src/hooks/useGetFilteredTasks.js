@@ -1,10 +1,10 @@
 import { useQuery } from "@tanstack/react-query";
 import { getFilteredTasks } from "../api/task.js";
 
-export function useTasks(page, limit) {
+export function useTasks(page, limit, sortBy) {
   return useQuery({
-    queryKey: ["tasks", page, limit],
-    queryFn: () => getFilteredTasks(page, limit),
+    queryKey: ["tasks", page, limit, sortBy],
+    queryFn: () => getFilteredTasks(page, limit, sortBy),
     keepPreviousData: true,
   });
 }

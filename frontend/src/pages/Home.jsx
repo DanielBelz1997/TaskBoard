@@ -1,7 +1,9 @@
 import React from "react";
 import Button from "@mui/material/Button";
 import { useForm } from "react-hook-form";
+import Select from "@mui/material/Select";
 import Snackbar from "@mui/material/Snackbar";
+import MenuItem from "@mui/material/MenuItem";
 import SendIcon from "@mui/icons-material/Send";
 import InputBase from "@mui/material/InputBase";
 import SearchIcon from "@mui/icons-material/Search";
@@ -27,6 +29,7 @@ export const Home = () => {
 
   const [searchTerm, setSearchTerm] = React.useState("");
   const [lastTask, setLastTask] = React.useState(null);
+  const [sortOption, setSortOption] = React.useState("priority");
 
   const addTaskMutation = useAddTask();
 
@@ -34,6 +37,10 @@ export const Home = () => {
 
   const handleSearchChange = (event) => {
     setSearchTerm(event.target.value);
+  };
+
+  const handleSortChange = (event) => {
+    setSortOption(event.target.value); // Update sorting option
   };
 
   const handleAddTask = (values) => {
@@ -107,6 +114,14 @@ export const Home = () => {
             onChange={handleSearchChange} // Update search term on input change
           />
         </Search>
+        <Select
+          value={sortOption}
+          onChange={handleSortChange}
+          defaultValue="priority"
+          sx={{ height: "2.59rem" }}>
+          <MenuItem value="createdAt">Date Created</MenuItem>
+          <MenuItem value="priority">Priority</MenuItem>
+        </Select>
       </div>
       <DialogComponent
         open={open}
@@ -118,7 +133,7 @@ export const Home = () => {
         acceptIcon={<SendIcon />}>
         <Form register={register} errors={errors} />
       </DialogComponent>
-      <DataTable searchTerm={searchTerm} />
+      <DataTable searchTerm={searchTerm} sortOption={sortOption} />
       <Snackbar
         open={snackBarOpen}
         autoHideDuration={6000}
