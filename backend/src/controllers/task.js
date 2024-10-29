@@ -105,13 +105,13 @@ const updateTask = async (req, res, next) => {
   try {
     const { id } = req.params;
 
-    const { title, description } = req.body;
-
-    const priority = priorityCalculation(title, description);
+    const { title, description, createdAt } = req.body;
 
     const task = await Task.findById(id);
 
     if (!task) return res.status(404).json({ message: `task ${id} not found` });
+
+    const priority = priorityCalculation(title, description, task.createdAt);
 
     task.title = title ?? task.title;
     task.description = description ?? task.description;

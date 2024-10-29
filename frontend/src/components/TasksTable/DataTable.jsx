@@ -102,8 +102,6 @@ export const DataTable = ({ searchTerm }) => {
     }
   }, [tasks, dispatch]);
 
-  console.log(tasks);
-
   if (isLoading) return <Loader />;
   if (!tasks?.tasks || !tasks?.tasks?.length) return <>no data...</>;
   if (error) return <>{error}</>;
@@ -128,7 +126,6 @@ export const DataTable = ({ searchTerm }) => {
   };
 
   const handlePageSizeChange = (newPageSize) => {
-    console.log(newPageSize);
     setPaginationModel({ page: 0, pageSize: newPageSize });
   };
 
@@ -181,13 +178,13 @@ export const DataTable = ({ searchTerm }) => {
   const renderPriority = (params) => {
     let name;
     let color;
-    if (params.formattedValue < 0.3) {
+    if (params.formattedValue <= 0.3) {
       name = "low";
       color = "success";
-    } else if (params.formattedValue < 0.7) {
+    } else if (params.formattedValue <= 0.7) {
       name = "medium";
       color = "warning";
-    } else if (params.formattedValue > 0.7) {
+    } else if (params.formattedValue >= 0.7) {
       name = "high";
       color = "error";
     }
