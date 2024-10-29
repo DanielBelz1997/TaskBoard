@@ -119,6 +119,8 @@ const updateTask = async (req, res, next) => {
 
     const updatedTask = await task.save();
 
+    cache.del(id);
+
     res
       .status(200)
       .json({ message: "Task updated successfully!", task: updatedTask });
