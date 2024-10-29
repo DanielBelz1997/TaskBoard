@@ -4,6 +4,7 @@ import { useForm } from "react-hook-form";
 import Tooltip from "@mui/material/Tooltip";
 import { DataGrid } from "@mui/x-data-grid";
 import InfoIcon from "@mui/icons-material/Info";
+import Chip from "@mui/material/Chip";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { useDispatch, useSelector } from "react-redux";
@@ -25,6 +26,7 @@ import {
   closeInfoDialog,
 } from "../../redux/infoDialogSlice.js";
 
+// eslint-disable-next-line react/prop-types
 export const DataTable = ({ searchTerm }) => {
   const dispatch = useDispatch();
   const [paginationModel, setPaginationModel] = React.useState({
@@ -44,13 +46,17 @@ export const DataTable = ({ searchTerm }) => {
     error,
   } = useTasks(paginationModel.page + 1, paginationModel.pageSize);
 
-  const filteredTasks = React.useMemo(() => tasks?.tasks?.filter(
-    (task) =>
-      // eslint-disable-next-line react/prop-types
-      task.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      // eslint-disable-next-line react/prop-types
-      task.description.toLowerCase().includes(searchTerm.toLowerCase())
-  ), [searchTerm, tasks]);
+  const filteredTasks = React.useMemo(
+    () =>
+      tasks?.tasks?.filter(
+        (task) =>
+          // eslint-disable-next-line react/prop-types
+          task.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          // eslint-disable-next-line react/prop-types
+          task.description.toLowerCase().includes(searchTerm.toLowerCase())
+      ),
+    [searchTerm, tasks]
+  );
 
   const { data: taskDetails } = useGetTaskById(
     selectedRowId ? selectedRowId : null
@@ -165,6 +171,33 @@ export const DataTable = ({ searchTerm }) => {
     </div>
   );
 
+  const renderPriority = (params) => {
+    let name;
+    let color;
+    if (params.formattedValue < 0.3) {
+      name = "low";
+      color = "success";
+    } else if (params.formattedValue < 0.7) {
+      name = "medium";
+      color = "warning";
+    } else if (params.formattedValue > 0.7) {
+      name = "high";
+      color = "error";
+    }
+
+    return (
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          height: "100%",
+        }}>
+        <Chip label={`${name}`} color={`${color}`} />
+      </div>
+    );
+  };
+
   const columns = [
     {
       field: "_id",
@@ -184,6 +217,14 @@ export const DataTable = ({ searchTerm }) => {
       field: "description",
       headerName: "Description",
       flex: 4,
+    },
+    {
+      field: "priority",
+      headerName: "Priority",
+      headerAlign: "center",
+      align: "center",
+      flex: 0.5,
+      renderCell: (params) => renderPriority(params),
     },
     {
       field: "actions",

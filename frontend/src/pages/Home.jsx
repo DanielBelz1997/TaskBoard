@@ -49,7 +49,6 @@ export const Home = () => {
     );
   };
 
-
   const dispatch = useDispatch();
   const { open } = useSelector((state) => state.createDialog);
   const { open: snackBarOpen } = useSelector((state) => state.snackBar);
@@ -102,7 +101,7 @@ export const Home = () => {
             <SearchIcon />
           </SearchIconWrapper>
           <StyledInputBase
-            placeholder="Search Task…"
+            placeholder="Search Tasks…"
             inputProps={{ "aria-label": "search" }}
             value={searchTerm}
             onChange={handleSearchChange} // Update search term on input change
@@ -130,7 +129,6 @@ export const Home = () => {
     </>
   );
 };
-
 
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
@@ -166,10 +164,11 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
     paddingLeft: `calc(1em + ${theme.spacing(4)})`,
     transition: theme.transitions.create("width"),
     [theme.breakpoints.up("sm")]: {
-      width: "12ch",
+      width: "15ch",
       "&:focus": {
         width: "20ch",
       },
     },
   },
 }));
+
