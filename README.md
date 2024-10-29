@@ -43,8 +43,8 @@ TaskBoard is a task management application built with React, Redux, Material-UI,
 4. **Run the Application**
 
    ```bash
-   cd server
-   npm start
+   cd client
+   npm run dev
    ```
 
    The application will run on `http://localhost:3000`.
