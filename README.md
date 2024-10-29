@@ -4,8 +4,6 @@ TaskBoard is a task management application built with React, Redux, Material-UI,
 
 # Demonstration
 
-[Watch Demo](./taskBoard.mp4)
-
 ## Features
 
 - **Task Management**: Add, view, update, and delete tasks seamlessly.
