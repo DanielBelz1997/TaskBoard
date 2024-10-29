@@ -2,7 +2,7 @@ import axios from "axios";
 
 export const getFilteredTasks = async () => {
   const response = await axios.get(`${import.meta.env.VITE_API_URL}/tasks`);
-  return response.data.tasks;
+  return response.data;
 };
 
 export const getTask = async (id) => {
@@ -28,3 +28,4 @@ export const updateTask = async ({ id, task }) => {
 
   return response.data;
 };
+
