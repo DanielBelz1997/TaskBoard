@@ -8,10 +8,8 @@ export const useAddTask = () => {
     mutationFn: createTask,
     onSuccess() {
       queryClient.invalidateQueries({ queryKey: ["tasks"] });
-      // toast.success("task created!");
     },
     onError(res) {
-      // toast.error("action failed. please try again later");
       console.log(res);
     },
   });

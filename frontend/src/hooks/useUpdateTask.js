@@ -1,4 +1,5 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+
 import { updateTask } from "../api/task";
 
 export const useUpdateTask = (id) => {
@@ -11,11 +12,10 @@ export const useUpdateTask = (id) => {
       if (id) {
         queryClient.invalidateQueries({ queryKey: ["tasks", id] });
       }
-      // toast.success("updated!");
     },
     onError(res) {
       console.error(res);
-      // toast.error("action failed. please try again");
     },
   });
 };
+

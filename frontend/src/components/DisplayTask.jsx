@@ -1,3 +1,5 @@
+import PropTypes from "prop-types";
+
 export const DisplayTask = ({ taskDetails }) => {
   return (
     <>
@@ -6,5 +8,13 @@ export const DisplayTask = ({ taskDetails }) => {
       <div>Priority: {taskDetails?.priority}</div>
     </>
   );
+};
+
+DisplayTask.propTypes = {
+  taskDetails: PropTypes.shape({
+    title: PropTypes.string.isRequired,
+    description: PropTypes.string,
+    priority: PropTypes.number,
+  }),
 };
 
