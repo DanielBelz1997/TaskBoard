@@ -5,6 +5,7 @@ import { apiSlice } from "./apiSlice.js";
 import { themeSlice } from "./themeSlice.js";
 import { snackBarSlice } from "./snackBarSlice.js";
 import { infoDialogSlice } from "./infoDialogSlice.js";
+import { snackBarUpdateSlice } from "./snackBarUpdate.js";
 import { updateDialogSlice } from "./updateDialogSlice.js";
 import { createDialogSlice } from "./createDialogSlice.js";
 
@@ -17,6 +18,7 @@ export const store = configureStore({
     infoDialog: infoDialogSlice.reducer,
     updateDialog: updateDialogSlice.reducer,
     createDialog: createDialogSlice.reducer,
+    updateSnackBar: snackBarUpdateSlice.reducer,
   },
 });
 

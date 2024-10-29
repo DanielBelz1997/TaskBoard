@@ -1,13 +1,17 @@
-import React, { useEffect } from "react";
+import Chip from "@mui/material/Chip";
 import Paper from "@mui/material/Paper";
+import React, { useEffect } from "react";
 import { useForm } from "react-hook-form";
+import Button from "@mui/material/Button";
 import Tooltip from "@mui/material/Tooltip";
 import { DataGrid } from "@mui/x-data-grid";
+import IconButton from "@mui/material/IconButton";
+import CloseIcon from "@mui/icons-material/Close";
 import InfoIcon from "@mui/icons-material/Info";
-import Chip from "@mui/material/Chip";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { useDispatch, useSelector } from "react-redux";
+import Snackbar from "@mui/material/Snackbar";
 
 import { Form } from "../Form.jsx";
 import { Loader } from "../Loader/index.jsx";
@@ -17,6 +21,10 @@ import { useUpdateTask } from "../../hooks/useUpdateTask.js";
 import { useTasks } from "../../hooks/useGetFilteredTasks.js";
 import { useGetTaskById } from "../../hooks/useGetTaskById.js";
 import { setRows, setRow, updateRow } from "../../redux/apiSlice.js";
+import {
+  openUpdateSnackBar,
+  closeUpdateSnackBar,
+} from "../../redux/snackBarUpdate.js";
 import {
   openUpdateDialog,
   closeUpdateDialog,
@@ -40,6 +48,7 @@ export const DataTable = ({ searchTerm }) => {
   const { open: infoOpen, selectedRowId } = useSelector(
     (state) => state.infoDialog
   );
+  const { open: openSnackBar } = useSelector((state) => state.updateSnackBar);
 
   const {
     data: tasks,
@@ -71,6 +80,29 @@ export const DataTable = ({ searchTerm }) => {
 
   const updateTaskMutation = useUpdateTask(selectedUpdateRowId?._id);
 
+  const handleSnackBarClose = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+
+    dispatch(closeUpdateSnackBar());
+  };
+
+  const action = (
+    <>
+      <Button color="secondary" size="small" onClick={handleSnackBarClose}>
+        UNDO
+      </Button>
+      <IconButton
+        size="small"
+        aria-label="close"
+        color="inherit"
+        onClick={handleSnackBarClose}>
+        <CloseIcon fontSize="small" />
+      </IconButton>
+    </>
+  );
+
   const {
     register,
     handleSubmit,
@@ -87,6 +119,7 @@ export const DataTable = ({ searchTerm }) => {
       {
         onSuccess: (updatedData) => {
           dispatch(updateRow(updatedData._id));
+          dispatch(openUpdateSnackBar());
           reset({
             title: updatedData.title,
             description: updatedData.description,
@@ -240,66 +273,75 @@ export const DataTable = ({ searchTerm }) => {
   ];
 
   return (
-    <Paper
-      sx={{
-        height: { xs: 550, sm: 600, md: 670 },
-        width: "100%",
-        overflow: "hidden",
-      }}>
-      <DataGrid
-        rows={filteredTasks || []} // Using the paginated tasks
-        columns={columns}
-        paginationMode="server"
-        rowCount={tasks?.meta?.totalTasks} // Total rows based on server response
-        pageSizeOptions={[5, 10, 20]}
-        pageSize={tasks.meta.pageSize}
-        page={paginationModel.page}
-        loading={isLoading}
-        paginationModel={paginationModel}
-        onPaginationModelChange={handlePaginationChange}
-        onPageSizeChange={handlePageSizeChange}
-        disableRowSelectionOnClick
-        getRowId={(row) => row._id}
-        initialState={{
-          pagination: { paginationModel },
-          columns: {
-            columnVisibilityModel: {
-              _id: false,
-            },
-          },
-        }}
+    <>
+      <Paper
         sx={{
-          border: 0,
-          "&.MuiDataGrid-root .MuiDataGrid-cell:focus-within": {
-            outline: "none !important",
-          },
-        }}
-      />
-      <DialogComponent
-        open={infoOpen}
-        setOpen={() => handleInfoOpen(taskDetails?._id)}
-        setClose={handleInfoClose}
-        title="Task Details"
-        acceptFun={null}
-        acceptText={null}
-        acceptIcon={null}>
-        {taskDetails && <DisplayTask taskDetails={taskDetails} />}
-      </DialogComponent>
-      <DialogComponent
-        open={editOpen}
-        setOpen={() => handleEditOpen(updateTaskDetails)}
-        setClose={handleEditClose}
-        title="Edit Task"
-        acceptFun={handleSubmit(handleUpdateTask)}
-        acceptText="Edit"
-        acceptIcon={<EditIcon />}>
-        <Form
-          register={register}
-          errors={errors}
-          updateTaskDetails={updateTaskDetails}
+          height: { xs: 550, sm: 600, md: 670 },
+          width: "100%",
+          overflow: "hidden",
+        }}>
+        <DataGrid
+          rows={filteredTasks || []} // Using the paginated tasks
+          columns={columns}
+          paginationMode="server"
+          rowCount={tasks?.meta?.totalTasks} // Total rows based on server response
+          pageSizeOptions={[5, 10, 20]}
+          pageSize={tasks.meta.pageSize}
+          page={paginationModel.page}
+          loading={isLoading}
+          paginationModel={paginationModel}
+          onPaginationModelChange={handlePaginationChange}
+          onPageSizeChange={handlePageSizeChange}
+          disableRowSelectionOnClick
+          getRowId={(row) => row._id}
+          initialState={{
+            pagination: { paginationModel },
+            columns: {
+              columnVisibilityModel: {
+                _id: false,
+              },
+            },
+          }}
+          sx={{
+            border: 0,
+            "&.MuiDataGrid-root .MuiDataGrid-cell:focus-within": {
+              outline: "none !important",
+            },
+          }}
         />
-      </DialogComponent>
-    </Paper>
+        <DialogComponent
+          open={infoOpen}
+          setOpen={() => handleInfoOpen(taskDetails?._id)}
+          setClose={handleInfoClose}
+          title="Task Details"
+          acceptFun={null}
+          acceptText={null}
+          acceptIcon={null}>
+          {taskDetails && <DisplayTask taskDetails={taskDetails} />}
+        </DialogComponent>
+        <DialogComponent
+          open={editOpen}
+          setOpen={() => handleEditOpen(updateTaskDetails)}
+          setClose={handleEditClose}
+          title="Edit Task"
+          acceptFun={handleSubmit(handleUpdateTask)}
+          acceptText="Edit"
+          acceptIcon={<EditIcon />}>
+          <Form
+            register={register}
+            errors={errors}
+            updateTaskDetails={updateTaskDetails}
+          />
+        </DialogComponent>
+      </Paper>
+      <Snackbar
+        open={openSnackBar}
+        autoHideDuration={6000}
+        onClose={handleSnackBarClose}
+        message="Task Updated!"
+        action={action}
+      />
+    </>
   );
 };
 
