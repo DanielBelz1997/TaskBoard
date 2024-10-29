@@ -4,14 +4,13 @@ import { useForm } from "react-hook-form";
 import Snackbar from "@mui/material/Snackbar";
 import SendIcon from "@mui/icons-material/Send";
 import InputBase from "@mui/material/InputBase";
-import IconButton from "@mui/material/IconButton";
-import CloseIcon from "@mui/icons-material/Close";
 import SearchIcon from "@mui/icons-material/Search";
 import { styled, alpha } from "@mui/material/styles";
 import { useDispatch, useSelector } from "react-redux";
 
 import { Form } from "../components/Form.jsx";
 import { useAddTask } from "../hooks/useCreateTask.js";
+import { Action } from "../components/snackAction.jsx";
 import { useDeleteTask } from "../hooks/useDeleteTask.js";
 import { DataTable } from "../components/TasksTable/DataTable";
 import { DialogComponent } from "../components/DialogComponent.jsx";
@@ -76,31 +75,14 @@ export const Home = () => {
 
   const handleUndo = () => {
     if (lastTask) {
-      console.log(lastTask);
-      // Call the delete mutation or function to remove the last task
       deleteTaskMutation.mutate(lastTask._id, {
         onSuccess: () => {
-          setLastTask(null); // Clear the last task
+          setLastTask(null);
           dispatch(closeSnackBar());
         },
       });
     }
   };
-
-  const action = (
-    <>
-      <Button color="secondary" size="small" onClick={handleUndo}>
-        UNDO
-      </Button>
-      <IconButton
-        size="small"
-        aria-label="close"
-        color="inherit"
-        onClick={handleSnackBarClose}>
-        <CloseIcon fontSize="small" />
-      </IconButton>
-    </>
-  );
 
   return (
     <>
@@ -142,7 +124,12 @@ export const Home = () => {
         autoHideDuration={6000}
         onClose={handleSnackBarClose}
         message="Task Created!"
-        action={action}
+        action={
+          <Action
+            handleSnackBarClose={handleSnackBarClose}
+            handleUndo={handleUndo}
+          />
+        }
       />
     </>
   );

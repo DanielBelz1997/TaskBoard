@@ -2,11 +2,8 @@ import Chip from "@mui/material/Chip";
 import Paper from "@mui/material/Paper";
 import React, { useEffect } from "react";
 import { useForm } from "react-hook-form";
-import Button from "@mui/material/Button";
 import Tooltip from "@mui/material/Tooltip";
 import { DataGrid } from "@mui/x-data-grid";
-import IconButton from "@mui/material/IconButton";
-import CloseIcon from "@mui/icons-material/Close";
 import InfoIcon from "@mui/icons-material/Info";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -38,6 +35,8 @@ import {
   closeDeleteSnackBar,
 } from "../../redux/snackBarDelete.js";
 import { useDeleteTask } from "../../hooks/useDeleteTask.js";
+import { useAddTask } from "../../hooks/useCreateTask.js";
+import { Action } from "../snackAction.jsx";
 
 // eslint-disable-next-line react/prop-types
 export const DataTable = ({ searchTerm }) => {
@@ -52,7 +51,8 @@ export const DataTable = ({ searchTerm }) => {
   const { open: infoOpen, selectedRowId } = useSelector(
     (state) => state.infoDialog
   );
-  const { open: openSnackBar } = useSelector((state) => state.updateSnackBar);
+  const { open: updateSnackBar } = useSelector((state) => state.updateSnackBar);
+  const { open: deleteSnackBar } = useSelector((state) => state.deleteSnackBar);
 
   const {
     data: tasks,
@@ -63,6 +63,7 @@ export const DataTable = ({ searchTerm }) => {
   const [lastTask, setLastTask] = React.useState(null);
 
   const deleteTaskMutation = useDeleteTask();
+  const AddTaskMutation = useAddTask();
 
   const filteredTasks = React.useMemo(
     () =>
@@ -85,8 +86,9 @@ export const DataTable = ({ searchTerm }) => {
   );
 
   const updateTaskMutation = useUpdateTask(selectedUpdateRowId?._id);
+  const undoUpdateTaskMutation = useUpdateTask(lastTask?._id);
 
-  const handleSnackBarClose = (event, reason) => {
+  const handleUpdateSnackBarClose = (event, reason) => {
     if (reason === "clickaway") {
       return;
     }
@@ -94,20 +96,13 @@ export const DataTable = ({ searchTerm }) => {
     dispatch(closeUpdateSnackBar());
   };
 
-  const action = (
-    <>
-      <Button color="secondary" size="small" onClick={handleSnackBarClose}>
-        UNDO
-      </Button>
-      <IconButton
-        size="small"
-        aria-label="close"
-        color="inherit"
-        onClick={handleSnackBarClose}>
-        <CloseIcon fontSize="small" />
-      </IconButton>
-    </>
-  );
+  const handleDeleteSnackBarClose = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+
+    dispatch(closeDeleteSnackBar());
+  };
 
   const {
     register,
@@ -124,12 +119,13 @@ export const DataTable = ({ searchTerm }) => {
       },
       {
         onSuccess: (updatedData) => {
-          dispatch(updateRow(updatedData._id));
+          setLastTask(updateTaskDetails);
+          dispatch(updateRow(updatedData?._id));
           dispatch(closeUpdateDialog());
           dispatch(openUpdateSnackBar());
           reset({
-            title: updatedData.title,
-            description: updatedData.description,
+            title: updatedData?.title,
+            description: updatedData?.description,
           });
         },
       }
@@ -180,6 +176,47 @@ export const DataTable = ({ searchTerm }) => {
         dispatch(openDeleteSnackBar());
       },
     });
+  };
+
+  const handleDeleteUndo = () => {
+    if (lastTask) {
+      console.log(lastTask);
+      AddTaskMutation.mutate(
+        {
+          title: lastTask.title,
+          description: lastTask.description,
+        },
+        {
+          onSuccess: () => {
+            setLastTask(null);
+            dispatch(closeDeleteSnackBar());
+          },
+        }
+      );
+    }
+  };
+
+  const handleUpdateUndo = () => {
+    if (lastTask) {
+      undoUpdateTaskMutation.mutate(
+        {
+          title: lastTask?.title,
+          description: lastTask?.description,
+        },
+        {
+          onSuccess: (updatedData) => {
+            setLastTask(null);
+            dispatch(updateRow(updatedData?._id));
+            dispatch(closeUpdateDialog());
+            dispatch(openUpdateSnackBar());
+            reset({
+              title: updatedData?.title,
+              description: updatedData?.description,
+            });
+          },
+        }
+      );
+    }
   };
 
   const renderActions = (params) => (
@@ -347,11 +384,28 @@ export const DataTable = ({ searchTerm }) => {
         </DialogComponent>
       </Paper>
       <Snackbar
-        open={openSnackBar}
+        open={deleteSnackBar}
         autoHideDuration={6000}
-        onClose={handleSnackBarClose}
-        message="Task Updated!"
-        action={action}
+        onClose={handleDeleteSnackBarClose}
+        message="Task Deleted!"
+        action={
+          <Action
+            handleSnackBarClose={handleDeleteSnackBarClose}
+            handleUndo={handleDeleteUndo}
+          />
+        }
+      />
+      <Snackbar
+        open={updateSnackBar}
+        autoHideDuration={6000}
+        onClose={handleUpdateSnackBarClose}
+        message="Task Update!"
+        action={
+          <Action
+            handleSnackBarClose={handleUpdateSnackBarClose}
+            handleUndo={handleUpdateUndo}
+          />
+        }
       />
     </>
   );
