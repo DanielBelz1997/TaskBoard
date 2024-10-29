@@ -89,7 +89,7 @@ export function DataTable() {
 
   console.log(tasks);
 
-  if (isLoading) return <Loader />;
+  if (isLoading && !tasks?.tasks) return <Loader />;
   if (!tasks?.tasks || !tasks?.tasks?.length) return <>no data...</>;
   if (error) return <>{error}</>;
 
@@ -118,8 +118,7 @@ export function DataTable() {
   };
 
   const handlePaginationChange = (newModel) => {
-    console.log("Pagination model changed:", newModel);
-    setPaginationModel(newModel); // Update state
+    setPaginationModel(newModel);
   };
 
   const renderActions = (params) => (
@@ -204,6 +203,7 @@ export function DataTable() {
         pageSizeOptions={[5, 10, 20]}
         pageSize={tasks.meta.pageSize}
         page={paginationModel.page}
+        loading={isLoading}
         paginationModel={paginationModel}
         onPaginationModelChange={handlePaginationChange}
         onPageSizeChange={handlePageSizeChange}

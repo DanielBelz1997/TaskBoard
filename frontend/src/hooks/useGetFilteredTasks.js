@@ -5,6 +5,7 @@ export function useTasks(page, limit) {
   return useQuery({
     queryKey: ["tasks", page, limit],
     queryFn: () => getFilteredTasks(page, limit),
+    keepPreviousData: true,
   });
 }
 
