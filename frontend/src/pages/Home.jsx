@@ -12,6 +12,7 @@ import { useDispatch, useSelector } from "react-redux";
 
 import { Form } from "../components/Form.jsx";
 import { useAddTask } from "../hooks/useCreateTask.js";
+import { useDeleteTask } from "../hooks/useDeleteTask.js";
 import { DataTable } from "../components/TasksTable/DataTable";
 import { DialogComponent } from "../components/DialogComponent.jsx";
 import { openSnackBar, closeSnackBar } from "../redux/snackBarSlice.js";
@@ -26,8 +27,11 @@ export const Home = () => {
   } = useForm();
 
   const [searchTerm, setSearchTerm] = React.useState("");
+  const [lastTask, setLastTask] = React.useState(null);
 
   const addTaskMutation = useAddTask();
+
+  const deleteTaskMutation = useDeleteTask();
 
   const handleSearchChange = (event) => {
     setSearchTerm(event.target.value);
@@ -40,7 +44,8 @@ export const Home = () => {
         description: values.description,
       },
       {
-        onSuccess: () => {
+        onSuccess: (data) => {
+          setLastTask(data?.task);
           dispatch(closeDialog());
           dispatch(openSnackBar());
           reset();
@@ -69,9 +74,22 @@ export const Home = () => {
     dispatch(closeSnackBar());
   };
 
+  const handleUndo = () => {
+    if (lastTask) {
+      console.log(lastTask);
+      // Call the delete mutation or function to remove the last task
+      deleteTaskMutation.mutate(lastTask._id, {
+        onSuccess: () => {
+          setLastTask(null); // Clear the last task
+          dispatch(closeSnackBar());
+        },
+      });
+    }
+  };
+
   const action = (
     <>
-      <Button color="secondary" size="small" onClick={handleSnackBarClose}>
+      <Button color="secondary" size="small" onClick={handleUndo}>
         UNDO
       </Button>
       <IconButton

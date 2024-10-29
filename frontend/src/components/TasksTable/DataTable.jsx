@@ -33,6 +33,10 @@ import {
   openInfoDialog,
   closeInfoDialog,
 } from "../../redux/infoDialogSlice.js";
+import {
+  openDeleteSnackBar,
+  closeDeleteSnackBar,
+} from "../../redux/snackBarDelete.js";
 import { useDeleteTask } from "../../hooks/useDeleteTask.js";
 
 // eslint-disable-next-line react/prop-types
@@ -55,6 +59,8 @@ export const DataTable = ({ searchTerm }) => {
     isLoading,
     error,
   } = useTasks(paginationModel.page + 1, paginationModel.pageSize);
+
+  const [lastTask, setLastTask] = React.useState(null);
 
   const deleteTaskMutation = useDeleteTask();
 
@@ -119,6 +125,7 @@ export const DataTable = ({ searchTerm }) => {
       {
         onSuccess: (updatedData) => {
           dispatch(updateRow(updatedData._id));
+          dispatch(closeUpdateDialog());
           dispatch(openUpdateSnackBar());
           reset({
             title: updatedData.title,
@@ -167,7 +174,12 @@ export const DataTable = ({ searchTerm }) => {
   };
 
   const handleDeleteTask = (id) => {
-    deleteTaskMutation.mutate(id);
+    deleteTaskMutation.mutate(id, {
+      onSuccess: (data) => {
+        setLastTask(data?.task);
+        dispatch(openDeleteSnackBar());
+      },
+    });
   };
 
   const renderActions = (params) => (

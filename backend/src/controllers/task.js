@@ -137,7 +137,7 @@ const deleteTask = async (req, res, next) => {
       return res.status(404).json({ message: `Task ${id} not found` });
     }
 
-    res.status(200).json({ message: "Task deleted successfully!" });
+    res.status(200).json({ message: "Task deleted successfully!", task: task });
   } catch (err) {
     next(err);
   }
